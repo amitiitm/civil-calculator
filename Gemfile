@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem "rails", "~> 8.1"
 # Pin below 3.x: json 3.x drops the `quirks_mode` kwarg that this Rails version's
 # session cookie serializer still passes, which breaks every request.
-gem "json", "~> 2.9"
+gem "json", "~> 3.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use mysql as the database for Active Record
