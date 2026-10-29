@@ -1,0 +1,42 @@
+<%= form_with model: [:admin, labour_rate], local: true, class: "space-y-4 max-w-xl" do |f| %>
+  <% if labour_rate.errors.any? %>
+    <div class="bg-red-50 text-red-800 text-sm rounded-md p-4">
+      <ul class="list-disc list-inside">
+        <% labour_rate.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :work_type, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :work_type, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :unit, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :unit, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :rate, "Rate (INR)", class: "block text-sm font-medium text-slate-700" %>
+    <%= f.number_field :rate, step: 0.01, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :city, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :city, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :state, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :state, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :quality_grade, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :quality_grade, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :active %>
+    <%= f.label :active, class: "text-sm font-medium text-slate-700" %>
+  </div>
+
+  <%= f.submit class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+<% end %>

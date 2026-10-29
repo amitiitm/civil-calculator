@@ -1,0 +1,26 @@
+<%= form_with model: [:admin, @calculation_formula, formula_parameter], local: true, class: "space-y-4 max-w-xl" do |f| %>
+  <% if formula_parameter.errors.any? %>
+    <div class="bg-red-50 text-red-800 text-sm rounded-md p-4">
+      <ul class="list-disc list-inside">
+        <% formula_parameter.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :key, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :key, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm font-mono text-sm" %>
+  </div>
+  <div>
+    <%= f.label :value, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.number_field :value, step: 0.0001, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :data_type, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :data_type, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+
+  <%= f.submit class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+<% end %>

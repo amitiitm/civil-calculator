@@ -1,0 +1,32 @@
+<% content_for :title, "Material Categories" %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold text-slate-900">Material Categories</h1>
+  <%= link_to "+ New Category", new_admin_material_category_path, class: "bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-semibold text-sm" %>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr class="text-left text-gray-500">
+        <th class="py-2 px-4">Position</th>
+        <th class="py-2 px-4">Code</th>
+        <th class="py-2 px-4">Name</th>
+        <th class="py-2 px-4"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @material_categories.each do |category| %>
+        <tr class="border-t border-gray-100">
+          <td class="py-2 px-4"><%= category.position %></td>
+          <td class="py-2 px-4"><%= category.code %></td>
+          <td class="py-2 px-4"><%= category.name %></td>
+          <td class="py-2 px-4 text-right">
+            <%= link_to "Edit", edit_admin_material_category_path(category), class: "text-slate-500 mr-3" %>
+            <%= button_to "Delete", admin_material_category_path(category), method: :delete, class: "text-red-500 inline", data: { turbo_confirm: "Delete this category?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

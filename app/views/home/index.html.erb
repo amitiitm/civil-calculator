@@ -1,0 +1,63 @@
+<% content_for :title, "BuildEstimate - Smart Home Construction Calculator" %>
+
+<section class="bg-white rounded-xl shadow-sm border border-gray-100 p-10 text-center">
+  <h1 class="text-4xl font-bold text-slate-900">Calculate Your Dream Home <span class="text-orange-500">Construction Cost</span> in Minutes</h1>
+  <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+    BuildEstimate turns your plot size, floors and room layout into a detailed material
+    quantity and cost estimate - bricks, cement, sand, aggregate, steel and more - priced in INR.
+  </p>
+  <div class="mt-6 flex items-center justify-center gap-4">
+    <% if user_signed_in? %>
+      <%= link_to "Start a New Project", new_project_path, class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md font-semibold" %>
+    <% else %>
+      <%= link_to "Create Free Account", new_user_registration_path, class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md font-semibold" %>
+      <%= link_to "Sign In", new_user_session_path, class: "border border-slate-300 px-6 py-3 rounded-md font-semibold hover:bg-gray-50" %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+    <h3 class="font-semibold text-slate-900">1. Plot &amp; Construction Details</h3>
+    <p class="text-sm text-gray-600 mt-2">Enter plot dimensions, built-up area, floors, BHK configuration and construction quality.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+    <h3 class="font-semibold text-slate-900">2. Floor &amp; Room Layout</h3>
+    <p class="text-sm text-gray-600 mt-2">Add floors, rooms, doors and windows - or start from editable BHK-based defaults.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+    <h3 class="font-semibold text-slate-900">3. Material Cost Breakdown</h3>
+    <p class="text-sm text-gray-600 mt-2">Get bricks, cement, sand, aggregate and steel quantities with a full cost dashboard and BOQ.</p>
+  </div>
+</section>
+
+<section class="mt-10">
+  <h2 class="text-2xl font-bold text-slate-900 text-center">Construction Quality Packages</h2>
+  <p class="text-center text-gray-600 mt-2">Illustrative starting rates per sqft - fully configurable by admins.</p>
+  <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <% @construction_packages.each do |package| %>
+      <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm text-center">
+        <h3 class="font-semibold text-slate-900"><%= package.name %></h3>
+        <p class="text-2xl font-bold text-orange-500 mt-2">&#8377;<%= number_with_delimiter(package.rate_per_sqft.to_i) %>/sqft</p>
+        <p class="text-sm text-gray-600 mt-2"><%= package.description %></p>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mt-10 bg-white rounded-xl border border-gray-100 p-8 shadow-sm">
+  <h2 class="text-2xl font-bold text-slate-900">Built for Civil Engineers &amp; Contractors</h2>
+  <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm text-gray-700 list-disc list-inside">
+    <li>Manage multiple client projects and revisions</li>
+    <li>Floor-wise room layouts with editable defaults</li>
+    <li>Detailed Bill of Quantities with PDF &amp; Excel export</li>
+    <li>Project-specific labour rates and cost comparisons</li>
+  </ul>
+</section>
+
+<section class="mt-10 bg-amber-50 border border-amber-200 rounded-xl p-6 text-sm text-amber-900">
+  <strong>Disclaimer:</strong> BuildEstimate produces preliminary estimates for planning purposes only.
+  It is not a substitute for structural engineering calculations, approved architectural plans, soil
+  testing, local building regulations, or certified quantity surveying. Structural elements must be
+  verified by a qualified structural engineer.
+</section>

@@ -1,0 +1,111 @@
+<% content_for :title, "Estimate v#{@estimate.version_number} - #{@estimate.project.name}" %>
+<% content_for :head do %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartkick@4"></script>
+<% end %>
+
+<div class="flex items-start justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900"><%= @estimate.project.name %> - Estimate v<%= @estimate.version_number %></h1>
+    <p class="text-gray-600 text-sm">Price date: <%= @estimate.price_date %> &middot; Status: <%= @estimate.status.humanize %></p>
+  </div>
+  <div class="flex gap-2">
+    <%= link_to "Download PDF", project_estimate_path(@estimate.project, @estimate, format: :pdf), class: "border border-slate-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-50" %>
+    <%= link_to "Download Excel", project_estimate_path(@estimate.project, @estimate, format: :xlsx), class: "border border-slate-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-50" %>
+    <%= button_to "Delete", project_estimate_path(@estimate.project, @estimate), method: :delete, data: { turbo_confirm: "Delete this estimate version?" }, class: "border border-red-300 text-red-600 px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-50" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Total Estimated Cost</p>
+    <p class="text-xl font-bold text-orange-600">&#8377;<%= number_with_delimiter(@estimate.total_cost.to_i) %></p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Material Cost</p>
+    <p class="text-xl font-bold text-slate-900">&#8377;<%= number_with_delimiter(@estimate.material_cost.to_i) %></p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Contingency</p>
+    <p class="text-xl font-bold text-slate-900">&#8377;<%= number_with_delimiter(@estimate.contingency_amount.to_i) %></p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Cost per sqft</p>
+    <p class="text-xl font-bold text-slate-900">&#8377;<%= number_with_delimiter(@estimate.cost_per_sqft.to_i) %></p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-slate-900 mb-3">Category-wise Cost</h2>
+    <%= pie_chart @estimate.estimate_line_items.group(:material_category_name).sum(:amount) %>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-slate-900 mb-3">Floor-wise Cost</h2>
+    <%= column_chart @estimate.estimate_line_items.group(:floor_label).sum(:amount) %>
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 mb-8">
+  <h2 class="text-lg font-semibold text-slate-900 mb-3">Overall Project Estimate</h2>
+  <p class="text-xs text-gray-500 mb-3">Total material quantities across every floor, including the average door/window allowance below.</p>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-gray-500 border-b border-gray-100">
+        <th class="py-2">Material</th>
+        <th class="py-2">Unit</th>
+        <th class="py-2">Total Quantity</th>
+        <th class="py-2">Total Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @overall_summary.each do |category, totals| %>
+        <tr class="border-b border-gray-50">
+          <td class="py-2 font-medium text-slate-900"><%= category.humanize %></td>
+          <td class="py-2"><%= totals[:unit] %></td>
+          <td class="py-2"><%= number_with_delimiter(totals[:quantity].round(2)) %></td>
+          <td class="py-2">&#8377;<%= number_with_delimiter(totals[:amount].to_i) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% @line_items_by_floor.each do |floor_label, items| %>
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 mb-6">
+    <h2 class="text-lg font-semibold text-slate-900 mb-3"><%= floor_label %></h2>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-500 border-b border-gray-100">
+          <th class="py-2">Item</th>
+          <th class="py-2">Unit</th>
+          <th class="py-2">Quantity</th>
+          <th class="py-2">Rate</th>
+          <th class="py-2">Amount</th>
+          <th class="py-2">Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.each do |item| %>
+          <tr class="border-b border-gray-50">
+            <td class="py-2"><%= item.item_name %></td>
+            <td class="py-2"><%= item.unit %></td>
+            <td class="py-2"><%= item.purchase_quantity %></td>
+            <td class="py-2">&#8377;<%= item.rate %></td>
+            <td class="py-2">&#8377;<%= number_with_delimiter(item.amount.to_i) %></td>
+            <td class="py-2">
+              <span class="text-xs px-2 py-0.5 rounded-full <%= item.calculated? ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' %>">
+                <%= item.data_source.humanize %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-900">
+  Column sizes, reinforcement, foundations, and slab thickness shown here are preliminary assumptions.
+  They must be verified by a qualified structural engineer before construction.
+</div>

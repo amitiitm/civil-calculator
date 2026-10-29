@@ -1,0 +1,36 @@
+<%= form_with model: window, url: (window.persisted? ? window_path(window) : project_floor_windows_path(@project_floor)), local: true, class: "space-y-4" do |f| %>
+  <% if window.errors.any? %>
+    <div class="bg-red-50 text-red-800 text-sm rounded-md p-4">
+      <ul class="list-disc list-inside">
+        <% window.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :room_id, "Room (leave blank for exterior window)", class: "block text-sm font-medium text-slate-700" %>
+    <%= f.collection_select :room_id, window.project_floor.rooms, :id, :name, { include_blank: "Exterior" }, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :window_type, "Type / material", class: "block text-sm font-medium text-slate-700" %>
+    <%= f.select :window_type, Window.window_types.keys.map { |k| [k.humanize, k] }, {}, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div class="grid grid-cols-3 gap-4">
+    <div>
+      <%= f.label :width_ft, "Width (ft)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :width_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :height_ft, "Height (ft)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :height_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :quantity, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :quantity, min: 1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+
+  <%= f.submit class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+<% end %>

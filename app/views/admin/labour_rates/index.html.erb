@@ -1,0 +1,36 @@
+<% content_for :title, "Labour Rates" %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold text-slate-900">Labour Rates</h1>
+  <%= link_to "+ New Labour Rate", new_admin_labour_rate_path, class: "bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-semibold text-sm" %>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr class="text-left text-gray-500">
+        <th class="py-2 px-4">Work Type</th>
+        <th class="py-2 px-4">Unit</th>
+        <th class="py-2 px-4">Rate</th>
+        <th class="py-2 px-4">City</th>
+        <th class="py-2 px-4">Active</th>
+        <th class="py-2 px-4"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @labour_rates.each do |rate| %>
+        <tr class="border-t border-gray-100">
+          <td class="py-2 px-4"><%= rate.work_type %></td>
+          <td class="py-2 px-4"><%= rate.unit %></td>
+          <td class="py-2 px-4">&#8377;<%= rate.rate %></td>
+          <td class="py-2 px-4"><%= rate.city %></td>
+          <td class="py-2 px-4"><%= rate.active? ? "Yes" : "No" %></td>
+          <td class="py-2 px-4 text-right">
+            <%= link_to "Edit", edit_admin_labour_rate_path(rate), class: "text-slate-500 mr-3" %>
+            <%= button_to "Delete", admin_labour_rate_path(rate), method: :delete, class: "text-red-500 inline", data: { turbo_confirm: "Delete this labour rate?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

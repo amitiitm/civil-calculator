@@ -1,0 +1,42 @@
+<div class="max-w-md mx-auto bg-white rounded-xl border border-gray-100 shadow-sm p-8">
+  <h2 class="text-2xl font-bold text-slate-900 mb-6">Create your free account</h2>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :name, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :name, autofocus: true, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :email, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.email_field :email, autocomplete: "email", class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :company_name, "Company name (optional, for engineers/contractors)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :company_name, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :password, class: "block text-sm font-medium text-slate-700" %>
+      <% if @minimum_password_length %>
+        <p class="text-xs text-gray-500">(<%= @minimum_password_length %> characters minimum)</p>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <%= f.submit "Sign up", class: "w-full bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+  <% end %>
+
+  <div class="mt-4 text-sm text-gray-600">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>
+

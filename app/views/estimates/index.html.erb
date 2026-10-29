@@ -1,0 +1,12 @@
+<% content_for :title, "Estimates - #{@project.name}" %>
+
+<h1 class="text-2xl font-bold text-slate-900 mb-6">Estimates for <%= @project.name %></h1>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-100">
+  <% @estimates.each do |estimate| %>
+    <%= link_to project_estimate_path(@project, estimate), class: "flex items-center justify-between p-4 hover:bg-gray-50" do %>
+      <span class="font-semibold text-slate-900">Version <%= estimate.version_number %></span>
+      <span class="text-gray-600">&#8377;<%= number_with_delimiter(estimate.total_cost.to_i) %></span>
+    <% end %>
+  <% end %>
+</div>

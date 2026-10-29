@@ -1,0 +1,137 @@
+<% content_for :title, "#{@project.name} - BuildEstimate" %>
+
+<div class="flex items-start justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900"><%= @project.name %></h1>
+    <p class="text-gray-600"><%= @project.client_name %> &middot; <%= @project.city %>, <%= @project.state %></p>
+  </div>
+  <div class="flex gap-2">
+    <%= link_to "Edit", edit_project_path(@project), class: "border border-slate-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-50" %>
+    <%= button_to "Duplicate", duplicate_project_path(@project), class: "border border-slate-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-50" %>
+    <%= button_to "Archive", archive_project_path(@project), method: :patch, class: "border border-slate-300 px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-50" %>
+    <%= button_to "Delete", project_path(@project), method: :delete, data: { turbo_confirm: "Delete this project and all its data?" }, class: "border border-red-300 text-red-600 px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-50" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Plot area</p>
+    <p class="text-lg font-bold text-slate-900"><%= number_with_delimiter(@project.plot_area_sqft.to_i) %> sqft</p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Built-up area / floor</p>
+    <p class="text-lg font-bold text-slate-900"><%= number_with_delimiter(@project.construction_footprint_sqft.to_i) %> sqft</p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Total built-up area</p>
+    <p class="text-lg font-bold text-slate-900"><%= number_with_delimiter(@project.total_built_up_area_sqft.to_i) %> sqft</p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Quality package</p>
+    <p class="text-lg font-bold text-slate-900"><%= @project.construction_quality.humanize %></p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 space-y-6">
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-slate-900">Floors &amp; Rooms</h2>
+        <%= link_to "+ Add Floor", new_project_project_floor_path(@project), class: "text-sm font-semibold text-orange-600" %>
+      </div>
+
+      <% if @project.project_floors.empty? %>
+        <p class="text-sm text-gray-500">No floors yet. Add a floor to start configuring rooms.</p>
+      <% else %>
+        <div class="space-y-4">
+          <% @project.project_floors.each do |floor| %>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-slate-900">
+                  <%= floor.name %> (Floor <%= floor.floor_number %>) - <%= floor.floor_height_ft %> ft height
+                  <% if floor.footprint_percentage < 100 %>
+                    <span class="text-xs font-normal text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5 ml-1"><%= floor.footprint_percentage.to_i %>% footprint</span>
+                  <% end %>
+                  <% if floor.bhk_type.present? %>
+                    <span class="text-xs font-normal text-slate-600 bg-gray-100 rounded-full px-2 py-0.5 ml-1"><%= floor.bhk_type.humanize %></span>
+                  <% end %>
+                </h3>
+                <div class="flex gap-3 text-sm">
+                  <%= link_to "+ Room", new_project_floor_room_path(floor), class: "text-orange-600 font-semibold" %>
+                  <%= link_to "+ Door", new_project_floor_door_path(floor), class: "text-orange-600 font-semibold" %>
+                  <%= link_to "+ Window", new_project_floor_window_path(floor), class: "text-orange-600 font-semibold" %>
+                  <%= link_to "Edit", edit_project_floor_path(floor), class: "text-slate-500" %>
+                  <%= button_to "Delete", project_floor_path(floor), method: :delete, data: { turbo_confirm: "Delete this floor?" }, class: "text-red-500" %>
+                </div>
+              </div>
+
+              <% if floor.exceeds_built_up_area? %>
+                <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 mt-2">
+                  Room layout area (<%= floor.total_room_area_sqft.round %> sqft) exceeds this floor's built-up area
+                  (<%= floor.footprint_sqft.round %> sqft). This layout may not be architecturally feasible.
+                </p>
+              <% end %>
+
+              <table class="w-full text-sm mt-3">
+                <thead>
+                  <tr class="text-left text-gray-500">
+                    <th class="py-1">Room</th>
+                    <th class="py-1">Size (ft)</th>
+                    <th class="py-1">Area (sqft)</th>
+                    <th class="py-1"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% floor.rooms.each do |room| %>
+                    <tr class="border-t border-gray-100">
+                      <td class="py-1"><%= room.name %> <span class="text-gray-400">(<%= room.room_type.humanize %>)</span></td>
+                      <td class="py-1"><%= room.length_ft %> &times; <%= room.width_ft %></td>
+                      <td class="py-1"><%= room.area_sqft.round(1) %></td>
+                      <td class="py-1 text-right">
+                        <%= link_to "Edit", edit_room_path(room), class: "text-slate-500" %>
+                        <%= button_to "Delete", room_path(room), method: :delete, class: "text-red-500 inline" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-slate-900 mb-4">Generate Estimate</h2>
+      <%= form_with url: project_estimates_path(@project), method: :post, local: true, class: "space-y-3" do %>
+        <label class="block text-sm font-medium text-slate-700">Construction package</label>
+        <%= select_tag :construction_package, options_for_select(ConstructionPackage.active.map { |p| [p.name, p.slug] }), class: "w-full rounded-md border-gray-300 shadow-sm" %>
+        <label class="block text-sm font-medium text-slate-700">Window material (avg. cost allowance)</label>
+        <%= select_tag :window_material, options_for_select([["Aluminium", "aluminium"], ["UPVC", "upvc"]]), class: "w-full rounded-md border-gray-300 shadow-sm" %>
+        <%= submit_tag "Generate Estimate", class: "w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-md font-semibold cursor-pointer" %>
+      <% end %>
+      <p class="text-xs text-gray-500 mt-2">Requires at least one floor with rooms.</p>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-slate-900 mb-4">Estimates</h2>
+      <% if @estimates.empty? %>
+        <p class="text-sm text-gray-500">No estimates generated yet.</p>
+      <% else %>
+        <ul class="divide-y divide-gray-100">
+          <% @estimates.each do |estimate| %>
+            <li class="py-3 flex items-center justify-between text-sm">
+              <div>
+                <%= link_to "Version #{estimate.version_number}", project_estimate_path(@project, estimate), class: "font-semibold text-orange-600" %>
+                <p class="text-gray-500">&#8377;<%= number_with_delimiter(estimate.total_cost.to_i) %></p>
+              </div>
+              <span class="text-xs text-gray-400"><%= estimate.price_date %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>

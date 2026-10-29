@@ -1,0 +1,75 @@
+<%= form_with model: project, local: true, class: "space-y-6" do |f| %>
+  <% if project.errors.any? %>
+    <div class="bg-red-50 text-red-800 text-sm rounded-md p-4">
+      <p class="font-semibold">Please fix the following:</p>
+      <ul class="list-disc list-inside">
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :name, "Project name", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :name, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :client_name, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :client_name, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :city, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :city, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :state, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :state, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+
+  <fieldset class="border border-gray-200 rounded-md p-4">
+    <legend class="text-sm font-semibold text-slate-900 px-1">Plot details (step 1)</legend>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :plot_length_ft, "Plot length (ft)", class: "block text-sm font-medium text-slate-700" %>
+        <%= f.number_field :plot_length_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= f.label :plot_width_ft, "Plot width (ft)", class: "block text-sm font-medium text-slate-700" %>
+        <%= f.number_field :plot_width_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= f.label :construction_length_ft, "Construction length (ft)", class: "block text-sm font-medium text-slate-700" %>
+        <%= f.number_field :construction_length_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= f.label :construction_width_ft, "Construction width (ft)", class: "block text-sm font-medium text-slate-700" %>
+        <%= f.number_field :construction_width_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= f.label :floors_count, "Number of floors", class: "block text-sm font-medium text-slate-700" %>
+        <%= f.number_field :floors_count, min: 0.5, step: 0.5, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+        <p class="text-xs text-gray-500 mt-1">Use a ".5" value (e.g. 2.5) for a partial top floor covering about half the footprint.</p>
+      </div>
+      <div>
+        <%= f.label :bhk_type, "BHK configuration", class: "block text-sm font-medium text-slate-700" %>
+        <%= f.select :bhk_type, Project.bhk_types.keys.map { |k| [k.humanize, k] }, {}, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+        <p class="text-xs text-gray-500 mt-1">Default floors &amp; rooms are generated from this on creation - edit them anytime below.</p>
+      </div>
+      <div>
+        <%= f.label :construction_quality, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.select :construction_quality, Project.construction_qualities.keys.map { |k| [k.humanize, k] }, {}, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 mt-2">Plot area and constructed area are different - account for setbacks, open spaces, parking and staircase areas.</p>
+  </fieldset>
+
+  <div>
+    <%= f.label :notes, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_area :notes, rows: 3, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+
+  <%= f.submit class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+<% end %>

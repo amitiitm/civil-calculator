@@ -1,0 +1,64 @@
+<%= form_with model: [:admin, material], local: true, class: "space-y-4 max-w-2xl" do |f| %>
+  <% if material.errors.any? %>
+    <div class="bg-red-50 text-red-800 text-sm rounded-md p-4">
+      <ul class="list-disc list-inside">
+        <% material.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :material_category_id, "Category", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.collection_select :material_category_id, MaterialCategory.all, :id, :name, {}, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :code, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :code, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :name, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :name, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :unit, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :unit, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :default_rate, "Default rate (INR)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :default_rate, step: 0.01, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :wastage_percentage, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :wastage_percentage, step: 0.01, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :quality_grade, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :quality_grade, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :brand, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :brand, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :formula_identifier, "Formula category code", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :formula_identifier, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :supplier, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :supplier, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :effective_date, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.date_field :effective_date, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div class="flex items-center gap-2 mt-6">
+      <%= f.check_box :active %>
+      <%= f.label :active, class: "text-sm font-medium text-slate-700" %>
+    </div>
+  </div>
+
+  <%= f.submit class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+<% end %>

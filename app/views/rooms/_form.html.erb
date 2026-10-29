@@ -1,0 +1,50 @@
+<%= form_with model: room, url: (room.persisted? ? room_path(room) : project_floor_rooms_path(@project_floor)), local: true, class: "space-y-4" do |f| %>
+  <% if room.errors.any? %>
+    <div class="bg-red-50 text-red-800 text-sm rounded-md p-4">
+      <ul class="list-disc list-inside">
+        <% room.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :room_type, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.select :room_type, Room.room_types.keys.map { |k| [k.humanize, k] }, {}, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div>
+    <%= f.label :name, class: "block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :name, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+  </div>
+  <div class="grid grid-cols-3 gap-4">
+    <div>
+      <%= f.label :length_ft, "Length (ft)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :length_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :width_ft, "Width (ft)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :width_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :wall_height_ft, "Wall height (ft)", class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :wall_height_ft, step: 0.1, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+  <div class="grid grid-cols-3 gap-4">
+    <div>
+      <%= f.label :door_count, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :door_count, min: 0, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :window_count, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :window_count, min: 0, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :electrical_point_count, class: "block text-sm font-medium text-slate-700" %>
+      <%= f.number_field :electrical_point_count, min: 0, class: "mt-1 w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+
+  <%= f.submit class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md font-semibold cursor-pointer" %>
+<% end %>

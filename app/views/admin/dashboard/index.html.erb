@@ -1,0 +1,46 @@
+<% content_for :title, "Admin Dashboard" %>
+
+<h1 class="text-2xl font-bold text-slate-900 mb-6">Dashboard</h1>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Projects</p>
+    <p class="text-2xl font-bold text-slate-900"><%= @projects_count %></p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Estimates</p>
+    <p class="text-2xl font-bold text-slate-900"><%= @estimates_count %></p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Users</p>
+    <p class="text-2xl font-bold text-slate-900"><%= @users_count %></p>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-100 p-4">
+    <p class="text-xs text-gray-500">Active Materials</p>
+    <p class="text-2xl font-bold text-slate-900"><%= @materials_count %></p>
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-3">Recent Projects</h2>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-gray-500 border-b border-gray-100">
+        <th class="py-2">Name</th>
+        <th class="py-2">Owner</th>
+        <th class="py-2">City</th>
+        <th class="py-2">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_projects.each do |project| %>
+        <tr class="border-b border-gray-50">
+          <td class="py-2"><%= project.name %></td>
+          <td class="py-2"><%= project.user.email %></td>
+          <td class="py-2"><%= project.city %></td>
+          <td class="py-2"><%= project.status.humanize %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

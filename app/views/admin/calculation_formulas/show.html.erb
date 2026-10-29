@@ -1,0 +1,35 @@
+<% content_for :title, @calculation_formula.name %>
+
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900"><%= @calculation_formula.name %></h1>
+    <p class="text-gray-500 text-sm font-mono"><%= @calculation_formula.category_code %> &middot; v<%= @calculation_formula.version %></p>
+  </div>
+  <%= link_to "+ Add Parameter", new_admin_calculation_formula_formula_parameter_path(@calculation_formula), class: "bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-semibold text-sm" %>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr class="text-left text-gray-500">
+        <th class="py-2 px-4">Key</th>
+        <th class="py-2 px-4">Value</th>
+        <th class="py-2 px-4">Type</th>
+        <th class="py-2 px-4"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @formula_parameters.each do |parameter| %>
+        <tr class="border-t border-gray-100">
+          <td class="py-2 px-4 font-mono text-xs"><%= parameter.key %></td>
+          <td class="py-2 px-4"><%= parameter.value %></td>
+          <td class="py-2 px-4"><%= parameter.data_type %></td>
+          <td class="py-2 px-4 text-right">
+            <%= link_to "Edit", edit_admin_calculation_formula_formula_parameter_path(@calculation_formula, parameter), class: "text-slate-500 mr-3" %>
+            <%= button_to "Delete", admin_calculation_formula_formula_parameter_path(@calculation_formula, parameter), method: :delete, class: "text-red-500 inline", data: { turbo_confirm: "Delete this parameter?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

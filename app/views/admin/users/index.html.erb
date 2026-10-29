@@ -1,0 +1,30 @@
+<% content_for :title, "Users" %>
+
+<h1 class="text-2xl font-bold text-slate-900 mb-6">Users</h1>
+
+<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr class="text-left text-gray-500">
+        <th class="py-2 px-4">Name</th>
+        <th class="py-2 px-4">Email</th>
+        <th class="py-2 px-4">Role</th>
+        <th class="py-2 px-4">Projects</th>
+        <th class="py-2 px-4"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr class="border-t border-gray-100">
+          <td class="py-2 px-4"><%= user.name %></td>
+          <td class="py-2 px-4"><%= user.email %></td>
+          <td class="py-2 px-4"><%= user.role.humanize %></td>
+          <td class="py-2 px-4"><%= user.projects.count %></td>
+          <td class="py-2 px-4 text-right">
+            <%= link_to "Edit role", edit_admin_user_path(user), class: "text-slate-500" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
